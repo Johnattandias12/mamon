@@ -5,11 +5,41 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mamon — Financial Intelligence</title>
   <meta name="description" content="Mamon — dashboard financeiro pessoal. Analise seus extratos bancários com inteligência e precisão." />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 </head>
 <body>
+
+<!-- ── WELCOME SCREEN ─────────────────────────────────────── -->
+<div class="wel-overlay" id="welOverlay">
+  <div class="wel-grid-bg" aria-hidden="true"></div>
+  <div class="wel-blob wel-blob-1" aria-hidden="true"></div>
+  <div class="wel-blob wel-blob-2" aria-hidden="true"></div>
+  <div class="wel-blob wel-blob-3" aria-hidden="true"></div>
+
+  <div class="wel-content">
+    <div class="wel-mark">
+      <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+        <path d="M2 28V4l9 11 5-7 5 7 9-11v24h-4V13l-5 7-5-6-5 6-5-7V28H2Z" fill="white"/>
+      </svg>
+    </div>
+
+    <div class="wel-brand" aria-label="Mamon">
+      <span class="wel-letter" style="--d:0">M</span>
+      <span class="wel-letter" style="--d:1">A</span>
+      <span class="wel-letter" style="--d:2">M</span>
+      <span class="wel-letter" style="--d:3">O</span>
+      <span class="wel-letter" style="--d:4">N</span>
+    </div>
+
+    <div class="wel-divider"></div>
+    <div class="wel-sub">Financial Intelligence</div>
+
+    <div class="wel-hint">Clique para continuar</div>
+  </div>
+</div>
 
 <!-- Ambient -->
 <div class="bg-noise" aria-hidden="true"></div>
@@ -39,7 +69,6 @@
 
     <div class="sb-logo">
       <div class="sb-logo-mark">
-        <!-- M lettermark -->
         <svg viewBox="0 0 14 14" fill="currentColor"><path d="M0 12V2l4.5 5L7 4l2.5 3L14 2v10h-2V6.5L9 9.5 7 7.5 5 9.5 2 6.5V12H0Z"/></svg>
       </div>
       <div class="sb-wordmark">
@@ -53,7 +82,7 @@
 
       <a class="nav-link active" id="nav-dashboard" href="#" onclick="go('dashboard');return false;">
         <span class="nav-link-icon">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
         </span>
         <span class="nav-link-label">Dashboard</span>
       </a>
@@ -126,7 +155,7 @@
       </div>
       <div class="topbar-right">
         <span class="topbar-period" id="period-label"></span>
-        <button class="tb-btn" onclick="refreshAll()" title="Atualizar">
+        <button class="tb-btn" onclick="refreshAll()" title="Atualizar dados">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
         </button>
         <button class="tb-btn danger" onclick="clearAll()" title="Limpar todos os dados">
@@ -149,20 +178,26 @@
           <button class="pill active" data-r="all" onclick="setRange('all')">Tudo</button>
         </div>
         <input type="date" class="f-select" id="fStart" onchange="applyF()">
-        <span class="f-label">→</span>
+        <span class="f-label" style="font-size:10px;opacity:0.4">→</span>
         <input type="date" class="f-select" id="fEnd" onchange="applyF()">
         <div class="f-sep"></div>
         <span class="f-label">Tipo</span>
-        <select class="f-select" id="fType" onchange="applyF()">
-          <option value="all">Todos</option>
-          <option value="credit">Entradas</option>
-          <option value="debit">Saídas</option>
-        </select>
+        <div class="sel-wrap">
+          <select class="f-select" id="fType" onchange="applyF()">
+            <option value="all">Todos</option>
+            <option value="credit">Entradas</option>
+            <option value="debit">Saídas</option>
+          </select>
+          <svg class="sel-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
         <div class="f-sep"></div>
         <span class="f-label">Categoria</span>
-        <select class="f-select" id="fCat" onchange="applyF()">
-          <option value="all">Todas</option>
-        </select>
+        <div class="sel-wrap">
+          <select class="f-select" id="fCat" onchange="applyF()">
+            <option value="all">Todas</option>
+          </select>
+          <svg class="sel-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
         <div class="f-sep"></div>
         <input class="f-input" type="text" id="fSearch" placeholder="Buscar descrição..." oninput="applyF()">
         <div class="f-space"></div>
@@ -173,7 +208,7 @@
       <div class="kpi-grid" id="kpiGrid">
         <div class="empty" style="grid-column:1/-1" id="kpiEmpty">
           <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-          <div class="empty-title">Sem dados</div>
+          <div class="empty-title">Sem dados carregados</div>
           <div class="empty-desc">Arraste um extrato CSV do Nubank na barra lateral ou acesse Importar para começar.</div>
         </div>
       </div>
@@ -184,14 +219,12 @@
           <div class="card-head">
             <div><div class="card-title">Fluxo de Caixa</div><div class="card-sub">Entradas e saídas diárias</div></div>
             <div class="legend">
-              <div class="leg-item"><div class="leg-dot" style="background:#30d158"></div>Entradas</div>
-              <div class="leg-item"><div class="leg-dot" style="background:#ff453a"></div>Saídas</div>
+              <div class="leg-item"><div class="leg-dot" style="background:#34d399"></div>Entradas</div>
+              <div class="leg-item"><div class="leg-dot" style="background:#f87171"></div>Saídas</div>
             </div>
           </div>
           <div class="card-body">
-            <div class="chart-wrap" style="height:220px">
-              <canvas id="cCashflow"></canvas>
-            </div>
+            <div class="chart-wrap" style="height:220px"><canvas id="cCashflow"></canvas></div>
           </div>
         </div>
         <div class="card">
@@ -199,9 +232,7 @@
             <div><div class="card-title">Categorias</div><div class="card-sub">Distribuição das despesas</div></div>
           </div>
           <div class="card-body">
-            <div class="chart-wrap" style="height:220px">
-              <canvas id="cDonut"></canvas>
-            </div>
+            <div class="chart-wrap" style="height:220px"><canvas id="cDonut"></canvas></div>
           </div>
         </div>
       </div>
@@ -249,14 +280,20 @@
             <input type="text" placeholder="Buscar..." id="tSearch" oninput="renderTbl()">
           </div>
           <div class="tbl-actions">
-            <select class="f-select" id="tType" onchange="renderTbl()" style="font-size:11px;height:30px">
-              <option value="all">Todos</option>
-              <option value="credit">Entradas</option>
-              <option value="debit">Saídas</option>
-            </select>
-            <select class="f-select" id="tCat" onchange="renderTbl()" style="font-size:11px;height:30px">
-              <option value="all">Categoria</option>
-            </select>
+            <div class="sel-wrap">
+              <select class="f-select" id="tType" onchange="renderTbl()">
+                <option value="all">Todos</option>
+                <option value="credit">Entradas</option>
+                <option value="debit">Saídas</option>
+              </select>
+              <svg class="sel-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="sel-wrap">
+              <select class="f-select" id="tCat" onchange="renderTbl()">
+                <option value="all">Categoria</option>
+              </select>
+              <svg class="sel-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
             <button class="btn-sm" onclick="exportCSV()">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
               Exportar
@@ -290,7 +327,10 @@
         <div class="card">
           <div class="card-head">
             <div><div class="card-title">Fluxo de Caixa</div></div>
-            <div class="legend"><div class="leg-item"><div class="leg-dot" style="background:#30d158"></div>Entradas</div><div class="leg-item"><div class="leg-dot" style="background:#ff453a"></div>Saídas</div></div>
+            <div class="legend">
+              <div class="leg-item"><div class="leg-dot" style="background:#34d399"></div>Entradas</div>
+              <div class="leg-item"><div class="leg-dot" style="background:#f87171"></div>Saídas</div>
+            </div>
           </div>
           <div class="card-body"><div class="chart-wrap" style="height:260px"><canvas id="g-cashflow"></canvas></div></div>
         </div>
@@ -366,8 +406,18 @@
           <span style="color:var(--text-3)">Nenhum dado carregado.</span>
         </div>
         <div class="card-body" style="border-top:1px solid var(--border-subtle);display:flex;gap:10px;flex-wrap:wrap;padding:14px 20px">
-          <button class="btn-sm" onclick="exportCSV()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Exportar CSV</button>
-          <button class="btn-sm" onclick="clearAll()" style="color:var(--red);border-color:rgba(255,69,58,0.2)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>Limpar dados</button>
+          <button class="btn-sm" onclick="exportCSV()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Exportar CSV
+          </button>
+          <button class="btn-sm" style="color:var(--red);border-color:rgba(248,113,113,0.25)" onclick="clearAll()">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+            Limpar dados
+          </button>
+          <button class="btn-sm" onclick="go('upload')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:12px;height:12px"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            Importar CSV
+          </button>
         </div>
       </div>
     </section>

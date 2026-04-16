@@ -15,9 +15,15 @@ const CATS = [
   { id:'recebimento',  label:'Recebimento',   kws:['recebida pelo pix','recebido pelo pix','transferência recebida','transferencia recebida','transferência recebida -'] },
 ];
 const CAT_COLORS = {
-  transporte:'#0a84ff', supermercado:'#30d158', alimentacao:'#ffd60a',
-  saude:'#ff453a', assinatura:'#32ade6', vestuario:'#bf5af2',
-  transferencia:'#8e8e93', recebimento:'#34c759', outros:'#48484a',
+  transporte:    '#60a5fa',  // sky blue
+  supermercado:  '#34d399',  // emerald
+  alimentacao:   '#fb923c',  // orange (readable)
+  saude:         '#f87171',  // red
+  assinatura:    '#22d3ee',  // cyan
+  vestuario:     '#c084fc',  // purple
+  transferencia: '#818cf8',  // indigo (NOT gray anymore)
+  recebimento:   '#4ade80',  // green
+  outros:        '#6b7280',  // slate (lighter)
 };
 
 // ── STATE ─────────────────────────────────────────────────────────
@@ -32,6 +38,7 @@ let fState = { start:null, end:null, type:'all', cat:'all', q:'', range:'all' };
 
 // ── BOOT ──────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
+  showWelcome();
   initCursor();
   Chart.defaults.font.family = "'Inter', sans-serif";
   Chart.defaults.color = 'rgba(255,255,255,0.28)';
@@ -41,6 +48,26 @@ document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('modalBg').onclick = e => { if(e.target === e.currentTarget) closeModal(); };
   go('dashboard');
 });
+
+// ── WELCOME SCREEN ────────────────────────────────────────────────
+function showWelcome() {
+  const el = document.getElementById('welOverlay');
+  if (!el) return;
+
+  const dismiss = () => {
+    el.classList.add('exit');
+    setTimeout(() => el.remove(), 800);
+  };
+
+  // Auto dismiss after 2.8s
+  const timer = setTimeout(dismiss, 2800);
+
+  // Click to skip
+  el.addEventListener('click', () => {
+    clearTimeout(timer);
+    dismiss();
+  });
+}
 
 // ── CURSOR GLOW ───────────────────────────────────────────────────
 function initCursor() {
@@ -283,11 +310,11 @@ function renderKPIs() {
       bar: Math.min(100, Math.abs(bal/Math.max(tin,tout))*100), barColor: bal>=0?'#30d158':'#ff453a' },
     { ico:'green',  valCls:'green',  val:fmtR(tin),  label:'Total Entradas',    badge:{cls:'neu',t:cr.length+' mov.'}, bar:100, barColor:'#30d158' },
     { ico:'red',    valCls:'red',    val:fmtR(tout), label:'Total Saídas',      badge:{cls:'neu',t:db.length+' mov.'}, bar:tout>0?Math.min(100,(tout/Math.max(tin,tout))*100):0, barColor:'#ff453a' },
-    { ico:'white',  valCls:'',       val:String(DATA.length), label:'Transações',  badge:{cls:'neu',t:days+' dias'}, bar:0, barColor:'' },
+    { ico:'white',  valCls:'',       val:String(DATA.length), label:'Transações',  badge:{cls:'neu',t:days+' dias'}, bar:0, barColor:'', },
     { ico:'red',    valCls:'red',    val:mxD?fmtR(Math.abs(mxD.value)):'—', label:'Maior Gasto',     badge:{cls:'neu',t:trunc(mxD?.desc||'—',22)}, bar:0, barColor:'' },
     { ico:'green',  valCls:'green',  val:mxC?fmtR(mxC.value):'—',          label:'Maior Entrada',   badge:{cls:'neu',t:trunc(mxC?.desc||'—',22)}, bar:0, barColor:'' },
-    { ico:'purple', valCls:'purple', val:fmtR(avg), label:'Média Diária Gasto', badge:{cls:'neu',t:'por dia'}, bar:0, barColor:'' },
-    { ico:'blue',   valCls:'blue',   val:fmtR(tr),  label:'Transporte',         badge:{cls:'neu',t:'99 · Uber · NuPay'}, bar:tr>0?Math.min(100,(tr/tout)*100):0, barColor:'#0a84ff' },
+    { ico:'indigo', valCls:'indigo', val:fmtR(avg), label:'Média Diária Gasto', badge:{cls:'neu',t:'por dia'}, bar:0, barColor:'' },
+    { ico:'cyan',   valCls:'cyan',   val:fmtR(tr),  label:'Transporte',         badge:{cls:'neu',t:'99 · Uber · NuPay'}, bar:tr>0?Math.min(100,(tr/tout)*100):0, barColor:'#60a5fa' },
   ];
 
   grid.innerHTML = kpis.map(k => `
@@ -309,10 +336,11 @@ function kpiSvg(color) {
     green:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`,
     red:    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>`,
     blue:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>`,
-    purple: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`,
+    indigo: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`,
+    purple: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><circle cx="12" cy="12" r="10"/><polyline points="8 12 12 16 16 12"/><line x1="12" y1="8" x2="12" y2="16"/></svg>`,
     white:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>`,
     amber:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`,
-    teal:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>`,
+    cyan:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>`,
   };
   return icons[color] || icons.white;
 }
@@ -409,8 +437,8 @@ function renderCashflow(id, data) {
   mkChart(id, {
     type:'line',
     data:{ labels, datasets:[
-      lineDs('Entradas', labels.map(l=>byDate[l].cr), '#30d158', true),
-      lineDs('Saídas',   labels.map(l=>byDate[l].db), '#ff453a', true),
+      lineDs('Entradas', labels.map(l=>byDate[l].cr), '#34d399', true),
+      lineDs('Saídas',   labels.map(l=>byDate[l].db), '#f87171', true),
     ]},
     options:{ ...BASE_OPTS, plugins:{ ...BASE_OPTS.plugins, legend:{ display:true, labels:{ color:'rgba(255,255,255,0.45)', font:{size:11}, boxWidth:8, boxHeight:8, padding:16 } }, tooltip:{ ...TOOLTIP, callbacks:{ label:ctx=>' '+fmtR(ctx.parsed.y) } } } },
   });
@@ -451,8 +479,8 @@ function renderMonthly(id, data) {
   mkChart(id, {
     type:'bar',
     data:{ labels, datasets:[
-      barDs('Entradas', keys.map(k=>bm[k].cr), '#30d158'),
-      barDs('Saídas',   keys.map(k=>bm[k].db), '#ff453a'),
+      barDs('Entradas', keys.map(k=>bm[k].cr), '#34d399'),
+      barDs('Saídas',   keys.map(k=>bm[k].db), '#f87171'),
     ]},
     options:{ ...BASE_OPTS, plugins:{ ...BASE_OPTS.plugins, legend:{ display:true, labels:{ color:'rgba(255,255,255,0.45)', font:{size:11}, boxWidth:8, boxHeight:8, padding:14 } }, tooltip:{ ...TOOLTIP, callbacks:{ label:ctx=>' '+fmtR(ctx.parsed.y) } } } },
   });
@@ -464,7 +492,7 @@ function renderAccum(id, data) {
   sorted.forEach(t=>{ const k=fmt(t.date); acc+=t.value; bd[k]=acc; });
   const labels=Object.keys(bd);
   const values=Object.values(bd);
-  const color = values[values.length-1]>=0 ? '#30d158' : '#ff453a';
+  const color = values[values.length-1]>=0 ? '#34d399' : '#f87171';
   mkChart(id, {
     type:'line',
     data:{ labels, datasets:[lineDs('Saldo', values, color, true)] },
@@ -501,9 +529,14 @@ function renderTop10(id, data) {
   if (!db.length) return;
   const labels = db.map(t=>trunc(t.desc,28));
   const vals   = db.map(t=>Math.abs(t.value));
+  // Build a gradient range from indigo → violet → rose (premium palette)
+  const GRAD_STOPS = [
+    '#818cf8','#8b92f8','#9b8df8','#a888f7','#b583f6',
+    '#c27ff5','#c47aec','#c675e3','#e07db3','#f87171',
+  ];
   mkChart(id, {
     type:'bar',
-    data:{ labels, datasets:[{ data:vals, backgroundColor:vals.map((_,i)=>`hsla(${210+i*12},80%,60%,0.7)`), borderRadius:4, borderSkipped:false }] },
+    data:{ labels, datasets:[{ data:vals, backgroundColor:vals.map((_,i)=>GRAD_STOPS[i]||GRAD_STOPS[GRAD_STOPS.length-1]), borderRadius:4, borderSkipped:false }] },
     options:{
       indexAxis:'y', responsive:true, maintainAspectRatio:false,
       plugins:{ legend:{display:false}, tooltip:{ ...TOOLTIP, callbacks:{ label:ctx=>' '+fmtR(ctx.parsed.x) } } },
