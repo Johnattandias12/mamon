@@ -1,0 +1,1523 @@
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { ArrowRightIcon, PhoneCallIcon } from "lucide-react";
+
+export function HeroSection() {
+	return (
+		<section className="mx-auto w-full max-w-5xl overflow-hidden pt-16">
+			{/* Shades */}
+			<div
+				aria-hidden="true"
+				className="absolute inset-0 size-full overflow-hidden"
+			>
+				<div
+					className={cn(
+						"absolute inset-0 isolate -z-10",
+						"bg-[radial-gradient(20%_80%_at_20%_0%,--theme(--color-foreground/.1),transparent)]"
+					)}
+				/>
+			</div>
+			<div className="relative z-10 flex max-w-2xl flex-col gap-5 px-4">
+				<a
+					className={cn(
+						"group flex w-fit items-center gap-3 rounded-sm border bg-card p-1 shadow-xs",
+						"fade-in slide-in-from-bottom-10 animate-in fill-mode-backwards transition-all delay-500 duration-500 ease-out"
+					)}
+					href="#link"
+				>
+					<div className="rounded-xs border bg-card px-1.5 py-0.5 shadow-sm">
+						<p className="font-mono text-xs">NOW</p>
+					</div>
+
+					<span className="text-xs">accepting new client projects</span>
+					<span className="block h-5 border-l" />
+
+					<div className="pr-1">
+						<ArrowRightIcon className="size-3 -translate-x-0.5 duration-150 ease-out group-hover:translate-x-0.5" />
+					</div>
+				</a>
+
+				<h1
+					className={cn(
+						"text-balance font-medium text-4xl text-foreground leading-tight md:text-5xl",
+						"fade-in slide-in-from-bottom-10 animate-in fill-mode-backwards delay-100 duration-500 ease-out"
+					)}
+				>
+					Building Digital Experiences That Drive Growth
+				</h1>
+
+				<p
+					className={cn(
+						"text-muted-foreground text-sm tracking-wider sm:text-lg md:text-xl",
+						"fade-in slide-in-from-bottom-10 animate-in fill-mode-backwards delay-200 duration-500 ease-out"
+					)}
+				>
+					We help brands scale faster through design, development <br /> and
+					strategic execution.
+				</p>
+
+				<div className="fade-in slide-in-from-bottom-10 flex w-fit animate-in items-center justify-center gap-3 fill-mode-backwards pt-2 delay-300 duration-500 ease-out">
+					<Button variant="outline">
+						<PhoneCallIcon className="size-4 mr-2" data-icon="inline-start" />{" "}
+						Book a Call
+					</Button>
+					<Button>
+						Get started{" "}
+						<ArrowRightIcon className="size-4 ml-2" data-icon="inline-end" />
+					</Button>
+				</div>
+			</div>
+			<div className="relative">
+				<div
+					className={cn(
+						"absolute -inset-x-20 inset-y-0 -translate-y-1/3 scale-120 rounded-full",
+						"bg-[radial-gradient(ellipse_at_center,theme(--color-foreground/.1),transparent,transparent)]",
+						"blur-[50px]"
+					)}
+				/>
+				<div
+					className={cn(
+						"mask-b-from-60% relative mt-8 -mr-56 overflow-hidden px-2 sm:mt-12 sm:mr-0 md:mt-20",
+						"fade-in slide-in-from-bottom-5 animate-in fill-mode-backwards delay-100 duration-1000 ease-out"
+					)}
+				>
+					<div className="relative inset-shadow-2xs inset-shadow-foreground/10 mx-auto max-w-5xl overflow-hidden rounded-lg border bg-background p-2 shadow-xl ring-1 ring-card dark:inset-shadow-foreground/20 dark:inset-shadow-xs">
+						<img
+							alt="app screen"
+							className="z-2 aspect-video rounded-lg border dark:hidden"
+							height="1080"
+							src="https://storage.efferd.com/screen/dashboard-light.webp"
+							width="1920"
+						/>
+						<img
+							alt="app screen"
+							className="hidden aspect-video rounded-lg bg-background dark:block"
+							height="1080"
+							src="https://storage.efferd.com/screen/dashboard-dark.webp"
+							width="1920"
+						/>
+					</div>
+				</div>
+			</div>
+		</section>
+	);
+}
+
+
+outro abaixo
+
+"use client";
+
+import * as React from "react";
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { cn } from "@/lib/utils";
+
+// Register ScrollTrigger safely for React
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
+// -------------------------------------------------------------------------
+// 1. THEME-ADAPTIVE INLINE STYLES
+// -------------------------------------------------------------------------
+const STYLES = `
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap');
+
+.cinematic-footer-wrapper {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  
+  /* Dynamic Variables using standard shadcn/tailwind v4 tokens */
+  --pill-bg-1: color-mix(in oklch, var(--foreground) 3%, transparent);
+  --pill-bg-2: color-mix(in oklch, var(--foreground) 1%, transparent);
+  --pill-shadow: color-mix(in oklch, var(--background) 50%, transparent);
+  --pill-highlight: color-mix(in oklch, var(--foreground) 10%, transparent);
+  --pill-inset-shadow: color-mix(in oklch, var(--background) 80%, transparent);
+  --pill-border: color-mix(in oklch, var(--foreground) 8%, transparent);
+  
+  --pill-bg-1-hover: color-mix(in oklch, var(--foreground) 8%, transparent);
+  --pill-bg-2-hover: color-mix(in oklch, var(--foreground) 2%, transparent);
+  --pill-border-hover: color-mix(in oklch, var(--foreground) 20%, transparent);
+  --pill-shadow-hover: color-mix(in oklch, var(--background) 70%, transparent);
+  --pill-highlight-hover: color-mix(in oklch, var(--foreground) 20%, transparent);
+}
+
+@keyframes footer-breathe {
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+  100% { transform: translate(-50%, -50%) scale(1.1); opacity: 1; }
+}
+
+@keyframes footer-scroll-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+@keyframes footer-heartbeat {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 5px color-mix(in oklch, var(--destructive) 50%, transparent)); }
+  15%, 45% { transform: scale(1.2); filter: drop-shadow(0 0 10px color-mix(in oklch, var(--destructive) 80%, transparent)); }
+  30% { transform: scale(1); }
+}
+
+.animate-footer-breathe {
+  animation: footer-breathe 8s ease-in-out infinite alternate;
+}
+
+.animate-footer-scroll-marquee {
+  animation: footer-scroll-marquee 40s linear infinite;
+}
+
+.animate-footer-heartbeat {
+  animation: footer-heartbeat 2s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+}
+
+/* Theme-adaptive Grid Background */
+.footer-bg-grid {
+  background-size: 60px 60px;
+  background-image: 
+    linear-gradient(to right, color-mix(in oklch, var(--foreground) 3%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in oklch, var(--foreground) 3%, transparent) 1px, transparent 1px);
+  mask-image: linear-gradient(to bottom, transparent, black 30%, black 70%, transparent);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, black 30%, black 70%, transparent);
+}
+
+/* Theme-adaptive Aurora Glow */
+.footer-aurora {
+  background: radial-gradient(
+    circle at 50% 50%, 
+    color-mix(in oklch, var(--primary) 15%, transparent) 0%, 
+    color-mix(in oklch, var(--secondary) 15%, transparent) 40%, 
+    transparent 70%
+  );
+}
+
+/* Glass Pill Theming */
+.footer-glass-pill {
+  background: linear-gradient(145deg, var(--pill-bg-1) 0%, var(--pill-bg-2) 100%);
+  box-shadow: 
+      0 10px 30px -10px var(--pill-shadow), 
+      inset 0 1px 1px var(--pill-highlight), 
+      inset 0 -1px 2px var(--pill-inset-shadow);
+  border: 1px solid var(--pill-border);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.footer-glass-pill:hover {
+  background: linear-gradient(145deg, var(--pill-bg-1-hover) 0%, var(--pill-bg-2-hover) 100%);
+  border-color: var(--pill-border-hover);
+  box-shadow: 
+      0 20px 40px -10px var(--pill-shadow-hover), 
+      inset 0 1px 1px var(--pill-highlight-hover);
+  color: var(--foreground);
+}
+
+/* Giant Background Text Masking */
+.footer-giant-bg-text {
+  font-size: 26vw;
+  line-height: 0.75;
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  color: transparent;
+  -webkit-text-stroke: 1px color-mix(in oklch, var(--foreground) 5%, transparent);
+  background: linear-gradient(180deg, color-mix(in oklch, var(--foreground) 10%, transparent) 0%, transparent 60%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* Metallic Text Glow */
+.footer-text-glow {
+  background: linear-gradient(180deg, var(--foreground) 0%, color-mix(in oklch, var(--foreground) 40%, transparent) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0px 0px 20px color-mix(in oklch, var(--foreground) 15%, transparent));
+}
+`;
+
+// -------------------------------------------------------------------------
+// 2. MAGNETIC BUTTON PRIMITIVE (Zero Dependency)
+// -------------------------------------------------------------------------
+export type MagneticButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & 
+  React.AnchorHTMLAttributes<HTMLAnchorElement> & {
+    as?: React.ElementType;
+  };
+
+const MagneticButton = React.forwardRef<HTMLElement, MagneticButtonProps>(
+  ({ className, children, as: Component = "button", ...props }, forwardedRef) => {
+    const localRef = useRef<HTMLElement>(null);
+
+    useEffect(() => {
+      if (typeof window === "undefined") return;
+      const element = localRef.current;
+      if (!element) return;
+
+      const ctx = gsap.context(() => {
+        const handleMouseMove = (e: MouseEvent) => {
+          const rect = element.getBoundingClientRect();
+          const h = rect.width / 2;
+          const w = rect.height / 2;
+          const x = e.clientX - rect.left - h;
+          const y = e.clientY - rect.top - w;
+
+          gsap.to(element, {
+            x: x * 0.4,
+            y: y * 0.4,
+            rotationX: -y * 0.15,
+            rotationY: x * 0.15,
+            scale: 1.05,
+            ease: "power2.out",
+            duration: 0.4,
+          });
+        };
+
+        const handleMouseLeave = () => {
+          gsap.to(element, {
+            x: 0,
+            y: 0,
+            rotationX: 0,
+            rotationY: 0,
+            scale: 1,
+            ease: "elastic.out(1, 0.3)",
+            duration: 1.2,
+          });
+        };
+
+        element.addEventListener("mousemove", handleMouseMove as any);
+        element.addEventListener("mouseleave", handleMouseLeave);
+
+        return () => {
+          element.removeEventListener("mousemove", handleMouseMove as any);
+          element.removeEventListener("mouseleave", handleMouseLeave);
+        };
+      }, element);
+
+      return () => ctx.revert();
+    },[]);
+
+    return (
+      <Component
+        ref={(node: HTMLElement) => {
+          (localRef as any).current = node;
+          if (typeof forwardedRef === "function") forwardedRef(node);
+          else if (forwardedRef) (forwardedRef as any).current = node;
+        }}
+        className={cn("cursor-pointer", className)}
+        {...props}
+      >
+        {children}
+      </Component>
+    );
+  }
+);
+MagneticButton.displayName = "MagneticButton";
+
+// -------------------------------------------------------------------------
+// 3. MAIN COMPONENT
+// -------------------------------------------------------------------------
+const MarqueeItem = () => (
+  <div className="flex items-center space-x-12 px-6">
+    <span>Accountability Redefined</span> <span className="text-primary/60">✦</span>
+    <span>Transparent Tracking</span> <span className="text-secondary/60">✦</span>
+    <span>12-Step Progress</span> <span className="text-primary/60">✦</span>
+    <span>Sponsor Connection</span> <span className="text-secondary/60">✦</span>
+    <span>Absolute Privacy</span> <span className="text-primary/60">✦</span>
+  </div>
+);
+
+export function CinematicFooter() {
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const giantTextRef = useRef<HTMLDivElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const linksRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!wrapperRef.current) return;
+
+    // React strict mode compatible GSAP context cleanup
+    const ctx = gsap.context(() => {
+      // Background Parallax
+      gsap.fromTo(
+        giantTextRef.current,
+        { y: "10vh", scale: 0.8, opacity: 0 },
+        {
+          y: "0vh",
+          scale: 1,
+          opacity: 1,
+          ease: "power1.out",
+          scrollTrigger: {
+            trigger: wrapperRef.current,
+            start: "top 80%",
+            end: "bottom bottom",
+            scrub: 1,
+          },
+        }
+      );
+
+      // Staggered Content Reveal
+      gsap.fromTo(
+        [headingRef.current, linksRef.current],
+        { y: 50, opacity: 0 },
+        {
+          y: 0,
+          opacity: 1,
+          stagger: 0.15,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: wrapperRef.current,
+            start: "top 40%",
+            end: "bottom bottom",
+            scrub: 1,
+          },
+        }
+      );
+    }, wrapperRef);
+
+    return () => ctx.revert();
+  },[]);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  return (
+    <>
+      <style dangerouslySetInnerHTML={{ __html: STYLES }} />
+      
+      {/* 
+        The "Curtain Reveal" Wrapper:
+        It sits in standard flow. Because it has clip-path, its contents
+        are ONLY visible within its bounding box. 
+      */}
+      <div
+        ref={wrapperRef}
+        className="relative h-screen w-full"
+        style={{ clipPath: "polygon(0% 0, 100% 0%, 100% 100%, 0 100%)" }}
+      >
+        {/* The actual footer stays fixed to the viewport underneath everything */}
+        <footer className="fixed bottom-0 left-0 flex h-screen w-full flex-col justify-between overflow-hidden bg-background text-foreground cinematic-footer-wrapper">
+          
+          {/* Ambient Light & Grid Background */}
+          <div className="footer-aurora absolute left-1/2 top-1/2 h-[60vh] w-[80vw] -translate-x-1/2 -translate-y-1/2 animate-footer-breathe rounded-[50%] blur-[80px] pointer-events-none z-0" />
+          <div className="footer-bg-grid absolute inset-0 z-0 pointer-events-none" />
+
+          {/* Giant background text */}
+          <div
+            ref={giantTextRef}
+            className="footer-giant-bg-text absolute -bottom-[5vh] left-1/2 -translate-x-1/2 whitespace-nowrap z-0 pointer-events-none select-none"
+          >
+            SOBERS
+          </div>
+
+          {/* 1. Diagonal Sleek Marquee (Top of footer) */}
+          <div className="absolute top-12 left-0 w-full overflow-hidden border-y border-border/50 bg-background/60 backdrop-blur-md py-4 z-10 -rotate-2 scale-110 shadow-2xl">
+            <div className="flex w-max animate-footer-scroll-marquee text-xs md:text-sm font-bold tracking-[0.3em] text-muted-foreground uppercase">
+              <MarqueeItem />
+              <MarqueeItem />
+            </div>
+          </div>
+
+          {/* 2. Main Center Content */}
+          <div className="relative z-10 flex flex-1 flex-col items-center justify-center px-6 mt-20 w-full max-w-5xl mx-auto">
+            <h2
+              ref={headingRef}
+              className="text-5xl md:text-8xl font-black footer-text-glow tracking-tighter mb-12 text-center"
+            >
+              Ready to begin?
+            </h2>
+
+            {/* Interactive Magnetic Pills Layout */}
+            <div ref={linksRef} className="flex flex-col items-center gap-6 w-full">
+              {/* App Store Links (Primary) */}
+              <div className="flex flex-wrap justify-center gap-4 w-full">
+                <MagneticButton as="a" href="#" className="footer-glass-pill px-10 py-5 rounded-full text-foreground font-bold text-sm md:text-base flex items-center gap-3 group">
+                  <svg className="w-6 h-6 text-muted-foreground group-hover:text-foreground transition-colors" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.04 2.26-.79 3.59-.76 1.56.04 2.87.67 3.55 1.76-3.13 1.77-2.62 5.92.35 7.14-.65 1.58-1.57 3.1-2.57 4.03zm-3.21-14.7c-.55 1.4-1.89 2.37-3.25 2.28.09-1.5 1.05-2.82 2.38-3.4 1.25-.57 2.66-.41 3.25.04-.15.35-.26.72-.38 1.08z" />
+                  </svg>
+                  Download iOS
+                </MagneticButton>
+                
+                <MagneticButton as="a" href="#" className="footer-glass-pill px-10 py-5 rounded-full text-foreground font-bold text-sm md:text-base flex items-center gap-3 group">
+                  <svg className="w-6 h-6 text-muted-foreground group-hover:text-foreground transition-colors" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993.0004.5511-.4482.9997-.9993.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9993.4482.9993.9993.0004.5511-.4482.9997-.9993.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0222 3.503C15.5902 8.242 13.8533 7.85 12 7.85c-1.8533 0-3.5902.392-5.1369 1.1004L4.841 5.4475a.416.416 0 00-.5676-.1521.416.416 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3436-4.1021-2.6893-7.5743-6.1185-9.4396" />
+                  </svg>
+                  Download Android
+                </MagneticButton>
+              </div>
+
+              {/* Secondary Text Links */}
+              <div className="flex flex-wrap justify-center gap-3 md:gap-6 w-full mt-2">
+                <MagneticButton as="a" href="#" className="footer-glass-pill px-6 py-3 rounded-full text-muted-foreground font-medium text-xs md:text-sm hover:text-foreground">
+                  Privacy Policy
+                </MagneticButton>
+                <MagneticButton as="a" href="#" className="footer-glass-pill px-6 py-3 rounded-full text-muted-foreground font-medium text-xs md:text-sm hover:text-foreground">
+                  Terms of Service
+                </MagneticButton>
+                <MagneticButton as="a" href="#" className="footer-glass-pill px-6 py-3 rounded-full text-muted-foreground font-medium text-xs md:text-sm hover:text-foreground">
+                  Support
+                </MagneticButton>
+              </div>
+            </div>
+          </div>
+
+          {/* 3. Bottom Bar / Credits */}
+          <div className="relative z-20 w-full pb-8 px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-6">
+            
+            {/* Copyright */}
+            <div className="text-muted-foreground text-[10px] md:text-xs font-semibold tracking-widest uppercase order-2 md:order-1">
+              © 2026 Volvox. All rights reserved.
+            </div>
+
+            {/* "Made with Love" Badge */}
+            <div className="footer-glass-pill px-6 py-3 rounded-full flex items-center gap-2 order-1 md:order-2 cursor-default border-border/50">
+              <span className="text-muted-foreground text-[10px] md:text-xs font-bold uppercase tracking-widest">Crafted with</span>
+              <span className="animate-footer-heartbeat text-sm md:text-base text-destructive">❤</span>
+              <span className="text-muted-foreground text-[10px] md:text-xs font-bold uppercase tracking-widest">by</span>
+              <span className="text-foreground font-black text-xs md:text-sm tracking-normal ml-1">Volvox</span>
+            </div>
+
+            {/* Back to top */}
+            <MagneticButton
+              as="button"
+              onClick={scrollToTop}
+              className="w-12 h-12 rounded-full footer-glass-pill flex items-center justify-center text-muted-foreground hover:text-foreground group order-3"
+            >
+              <svg className="w-5 h-5 transform group-hover:-translate-y-1.5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path>
+              </svg>
+            </MagneticButton>
+
+          </div>
+        </footer>
+      </div>
+    </>
+  );
+}
+
+outro abaixo:
+
+"use client";
+
+import { useState } from "react";
+import { ArrowRight, Menu, X } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+
+const Hero2 = () => {
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  return (
+    <div className="relative min-h-screen overflow-hidden bg-black">
+      {/* Gradient background with grain effect */}
+      <div className="flex flex-col items-end absolute -right-60 -top-10 blur-xl z-0 ">
+        <div className="h-[10rem] rounded-full w-[60rem] z-1 bg-gradient-to-b blur-[6rem] from-purple-600 to-sky-600"></div>
+        <div className="h-[10rem] rounded-full w-[90rem] z-1 bg-gradient-to-b blur-[6rem] from-pink-900 to-yellow-400"></div>
+        <div className="h-[10rem] rounded-full w-[60rem] z-1 bg-gradient-to-b blur-[6rem] from-yellow-600 to-sky-500"></div>
+      </div>
+      <div className="absolute inset-0 z-0 bg-noise opacity-30"></div>
+
+      {/* Content container */}
+      <div className="relative z-10">
+        {/* Navigation */}
+        <nav className="container mx-auto flex items-center justify-between px-4 py-4 mt-6">
+          <div className="flex items-center">
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-black">
+              <span className="font-bold">⚡</span>
+            </div>
+            <span className="ml-2 text-xl font-bold text-white">LeadGenie</span>
+          </div>
+
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-6">
+            <div className="flex items-center space-x-6">
+              <NavItem label="Use Cases" hasDropdown />
+              <NavItem label="Products" hasDropdown />
+              <NavItem label="Resources" hasDropdown />
+              <NavItem label="Pricing" />
+            </div>
+            <div className="flex items-center space-x-3">
+              <button className="h-12 rounded-full bg-white px-8 text-base font-medium text-black hover:bg-white/90">
+                Login
+              </button>
+            </div>
+          </div>
+
+          {/* Mobile menu button */}
+          <button
+            className="md:hidden"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            <span className="sr-only">Toggle menu</span>
+            {mobileMenuOpen ? (
+              <X className="h-6 w-6 text-white" />
+            ) : (
+              <Menu className="h-6 w-6 text-white" />
+            )}
+          </button>
+        </nav>
+
+        {/* Mobile Navigation Menu with animation */}
+        <AnimatePresence>
+          {mobileMenuOpen && (
+            <motion.div
+              initial={{ y: "-100%" }}
+              animate={{ y: 0 }}
+              exit={{ y: "-100%" }}
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 z-50 flex flex-col p-4 bg-black/95 md:hidden"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-black">
+                    <span className="font-bold">⚡</span>
+                  </div>
+                  <span className="ml-2 text-xl font-bold text-white">
+                    LeadGenie
+                  </span>
+                </div>
+                <button onClick={() => setMobileMenuOpen(false)}>
+                  <X className="h-6 w-6 text-white" />
+                </button>
+              </div>
+              <div className="mt-8 flex flex-col space-y-6">
+                <MobileNavItem label="Use Cases" />
+                <MobileNavItem label="Products" />
+                <MobileNavItem label="Resources" />
+                <MobileNavItem label="Pricing" />
+                <div className="pt-4">
+                  <button className="w-full justify-start border border-gray-700 text-white">
+                    Log in
+                  </button>
+                </div>
+                <button className="h-12 rounded-full bg-white px-8 text-base font-medium text-black hover:bg-white/90">
+                  Get Started For Free
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Badge */}
+        <div className="mx-auto mt-6 flex max-w-fit items-center justify-center space-x-2 rounded-full bg-white/10 px-4 py-2 backdrop-blur-sm">
+          <span className="text-sm font-medium text-white">
+            Join the revolution today!
+          </span>
+          <ArrowRight className="h-4 w-4 text-white" />
+        </div>
+
+        {/* Hero section */}
+        <div className="container mx-auto mt-12 px-4 text-center">
+          <h1 className="mx-auto max-w-4xl text-5xl font-bold leading-tight text-white md:text-6xl lg:text-7xl">
+            Unbeatable Pricing for Dynamic Email Tools
+          </h1>
+          <p className="mx-auto mt-6 max-w-2xl text-lg text-gray-300">
+            Delivering unmatched email campaigns every day at unbeatable rates.
+            Our tool redefines cost-effectiveness. Now!!!
+          </p>
+          <div className="mt-10 flex flex-col items-center justify-center space-y-4 sm:flex-row sm:space-x-4 sm:space-y-0">
+            <button className="h-12 rounded-full bg-white px-8 text-base font-medium text-black hover:bg-white/90">
+              Start Your 7 Day Free Trial
+            </button>
+            <button className="h-12 rounded-full border border-gray-600 px-8 text-base font-medium text-white hover:bg-white/10">
+              Watch Demo
+            </button>
+          </div>
+
+          <div className="relative mx-auto my-20 w-full max-w-6xl">
+            <div className="absolute inset-0 rounded shadow-lg bg-white blur-[10rem] bg-grainy opacity-20" />
+
+            {/* Hero Image */}
+            <img
+              src="https://kikxai.netlify.app/_next/image?url=%2Fassets%2Fhero-image.png&w=1920&q=75"
+              alt="Hero Image"
+              className="relative w-full h-auto shadow-md grayscale-100 rounded"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+function NavItem({
+  label,
+  hasDropdown,
+}: {
+  label: string;
+  hasDropdown?: boolean;
+}) {
+  return (
+    <div className="flex items-center text-sm text-gray-300 hover:text-white">
+      <span>{label}</span>
+      {hasDropdown && (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="ml-1"
+        >
+          <path d="m6 9 6 6 6-6" />
+        </svg>
+      )}
+    </div>
+  );
+}
+
+function MobileNavItem({ label }: { label: string }) {
+  return (
+    <div className="flex items-center justify-between border-b border-gray-800 pb-2 text-lg text-white">
+      <span>{label}</span>
+      <ArrowRight className="h-4 w-4 text-gray-400" />
+    </div>
+  );
+}
+
+export { Hero2 };
+
+outro abaixo
+
+"use client";
+
+import { cn } from "@/lib/utils";
+import {
+    CheckCircle,
+    Clock,
+    Star,
+    TrendingUp,
+    Video,
+    Globe,
+} from "lucide-react";
+
+export interface BentoItem {
+    title: string;
+    description: string;
+    icon: React.ReactNode;
+    status?: string;
+    tags?: string[];
+    meta?: string;
+    cta?: string;
+    colSpan?: number;
+    hasPersistentHover?: boolean;
+}
+
+interface BentoGridProps {
+    items: BentoItem[];
+}
+
+const itemsSample: BentoItem[] = [
+    {
+        title: "Analytics Dashboard",
+        meta: "v2.4.1",
+        description:
+            "Real-time metrics with AI-powered insights and predictive analytics",
+        icon: <TrendingUp className="w-4 h-4 text-blue-500" />,
+        status: "Live",
+        tags: ["Statistics", "Reports", "AI"],
+        colSpan: 2,
+        hasPersistentHover: true,
+    },
+    {
+        title: "Task Manager",
+        meta: "84 completed",
+        description: "Automated workflow management with priority scheduling",
+        icon: <CheckCircle className="w-4 h-4 text-emerald-500" />,
+        status: "Updated",
+        tags: ["Productivity", "Automation"],
+    },
+    {
+        title: "Media Library",
+        meta: "12GB used",
+        description: "Cloud storage with intelligent content processing",
+        icon: <Video className="w-4 h-4 text-purple-500" />,
+        tags: ["Storage", "CDN"],
+        colSpan: 2,
+    },
+    {
+        title: "Global Network",
+        meta: "6 regions",
+        description: "Multi-region deployment with edge computing",
+        icon: <Globe className="w-4 h-4 text-sky-500" />,
+        status: "Beta",
+        tags: ["Infrastructure", "Edge"],
+    },
+];
+
+function BentoGrid({ items = itemsSample }: BentoGridProps) {
+    return (
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 p-4 max-w-7xl mx-auto">
+            {items.map((item, index) => (
+                <div
+                    key={index}
+                    className={cn(
+                        "group relative p-4 rounded-xl overflow-hidden transition-all duration-300",
+                        "border border-gray-100/80 dark:border-white/10 bg-white dark:bg-black",
+                        "hover:shadow-[0_2px_12px_rgba(0,0,0,0.03)] dark:hover:shadow-[0_2px_12px_rgba(255,255,255,0.03)]",
+                        "hover:-translate-y-0.5 will-change-transform",
+                        item.colSpan || "col-span-1",
+                        item.colSpan === 2 ? "md:col-span-2" : "",
+                        {
+                            "shadow-[0_2px_12px_rgba(0,0,0,0.03)] -translate-y-0.5":
+                                item.hasPersistentHover,
+                            "dark:shadow-[0_2px_12px_rgba(255,255,255,0.03)]":
+                                item.hasPersistentHover,
+                        }
+                    )}
+                >
+                    <div
+                        className={`absolute inset-0 ${
+                            item.hasPersistentHover
+                                ? "opacity-100"
+                                : "opacity-0 group-hover:opacity-100"
+                        } transition-opacity duration-300`}
+                    >
+                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,0,0,0.02)_1px,transparent_1px)] dark:bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[length:4px_4px]" />
+                    </div>
+
+                    <div className="relative flex flex-col space-y-3">
+                        <div className="flex items-center justify-between">
+                            <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-black/5 dark:bg-white/10 group-hover:bg-gradient-to-br transition-all duration-300">
+                                {item.icon}
+                            </div>
+                            <span
+                                className={cn(
+                                    "text-xs font-medium px-2 py-1 rounded-lg backdrop-blur-sm",
+                                    "bg-black/5 dark:bg-white/10 text-gray-600 dark:text-gray-300",
+                                    "transition-colors duration-300 group-hover:bg-black/10 dark:group-hover:bg-white/20"
+                                )}
+                            >
+                                {item.status || "Active"}
+                            </span>
+                        </div>
+
+                        <div className="space-y-2">
+                            <h3 className="font-medium text-gray-900 dark:text-gray-100 tracking-tight text-[15px]">
+                                {item.title}
+                                <span className="ml-2 text-xs text-gray-500 dark:text-gray-400 font-normal">
+                                    {item.meta}
+                                </span>
+                            </h3>
+                            <p className="text-sm text-gray-600 dark:text-gray-300 leading-snug font-[425]">
+                                {item.description}
+                            </p>
+                        </div>
+
+                        <div className="flex items-center justify-between mt-2">
+                            <div className="flex items-center space-x-2 text-xs text-gray-500 dark:text-gray-400">
+                                {item.tags?.map((tag, i) => (
+                                    <span
+                                        key={i}
+                                        className="px-2 py-1 rounded-md bg-black/5 dark:bg-white/10 backdrop-blur-sm transition-all duration-200 hover:bg-black/10 dark:hover:bg-white/20"
+                                    >
+                                        #{tag}
+                                    </span>
+                                ))}
+                            </div>
+                            <span className="text-xs text-gray-500 dark:text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                                {item.cta || "Explore →"}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div
+                        className={`absolute inset-0 -z-10 rounded-xl p-px bg-gradient-to-br from-transparent via-gray-100/50 to-transparent dark:via-white/10 ${
+                            item.hasPersistentHover
+                                ? "opacity-100"
+                                : "opacity-0 group-hover:opacity-100"
+                        } transition-opacity duration-300`}
+                    />
+                </div>
+            ))}
+        </div>
+    );
+}
+
+export { BentoGrid }
+
+outro abaixo
+
+"use client"
+import React, { useState, useEffect } from "react";
+import {
+  Home,
+  DollarSign,
+  Monitor,
+  ShoppingCart,
+  Tag,
+  BarChart3,
+  Users,
+  ChevronDown,
+  ChevronsRight,
+  Moon,
+  Sun,
+  TrendingUp,
+  Activity,
+  Package,
+  Bell,
+  Settings,
+  HelpCircle,
+  User,
+} from "lucide-react";
+
+export const Example = () => {
+  const [isDark, setIsDark] = useState(false);
+
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDark]);
+
+  return (
+    <div className={`flex min-h-screen w-full ${isDark ? 'dark' : ''}`}>
+      <div className="flex w-full bg-gray-50 dark:bg-gray-950 text-gray-900 dark:text-gray-100">
+        <Sidebar />
+        <ExampleContent isDark={isDark} setIsDark={setIsDark} />
+      </div>
+    </div>
+  );
+};
+
+const Sidebar = () => {
+  const [open, setOpen] = useState(true);
+  const [selected, setSelected] = useState("Dashboard");
+
+  return (
+    <nav
+      className={`sticky top-0 h-screen shrink-0 border-r transition-all duration-300 ease-in-out ${
+        open ? 'w-64' : 'w-16'
+      } border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-2 shadow-sm`}
+    >
+      <TitleSection open={open} />
+
+      <div className="space-y-1 mb-8">
+        <Option
+          Icon={Home}
+          title="Dashboard"
+          selected={selected}
+          setSelected={setSelected}
+          open={open}
+        />
+        <Option
+          Icon={DollarSign}
+          title="Sales"
+          selected={selected}
+          setSelected={setSelected}
+          open={open}
+          notifs={3}
+        />
+        <Option
+          Icon={Monitor}
+          title="View Site"
+          selected={selected}
+          setSelected={setSelected}
+          open={open}
+        />
+        <Option
+          Icon={ShoppingCart}
+          title="Products"
+          selected={selected}
+          setSelected={setSelected}
+          open={open}
+        />
+        <Option
+          Icon={Tag}
+          title="Tags"
+          selected={selected}
+          setSelected={setSelected}
+          open={open}
+        />
+        <Option
+          Icon={BarChart3}
+          title="Analytics"
+          selected={selected}
+          setSelected={setSelected}
+          open={open}
+        />
+        <Option
+          Icon={Users}
+          title="Members"
+          selected={selected}
+          setSelected={setSelected}
+          open={open}
+          notifs={12}
+        />
+      </div>
+
+      {open && (
+        <div className="border-t border-gray-200 dark:border-gray-800 pt-4 space-y-1">
+          <div className="px-3 py-2 text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+            Account
+          </div>
+          <Option
+            Icon={Settings}
+            title="Settings"
+            selected={selected}
+            setSelected={setSelected}
+            open={open}
+          />
+          <Option
+            Icon={HelpCircle}
+            title="Help & Support"
+            selected={selected}
+            setSelected={setSelected}
+            open={open}
+          />
+        </div>
+      )}
+
+      <ToggleClose open={open} setOpen={setOpen} />
+    </nav>
+  );
+};
+
+const Option = ({ Icon, title, selected, setSelected, open, notifs }) => {
+  const isSelected = selected === title;
+  
+  return (
+    <button
+      onClick={() => setSelected(title)}
+      className={`relative flex h-11 w-full items-center rounded-md transition-all duration-200 ${
+        isSelected 
+          ? "bg-blue-50 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 shadow-sm border-l-2 border-blue-500" 
+          : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-200"
+      }`}
+    >
+      <div className="grid h-full w-12 place-content-center">
+        <Icon className="h-4 w-4" />
+      </div>
+      
+      {open && (
+        <span
+          className={`text-sm font-medium transition-opacity duration-200 ${
+            open ? 'opacity-100' : 'opacity-0'
+          }`}
+        >
+          {title}
+        </span>
+      )}
+
+      {notifs && open && (
+        <span className="absolute right-3 flex h-5 w-5 items-center justify-center rounded-full bg-blue-500 dark:bg-blue-600 text-xs text-white font-medium">
+          {notifs}
+        </span>
+      )}
+    </button>
+  );
+};
+
+const TitleSection = ({ open }) => {
+  return (
+    <div className="mb-6 border-b border-gray-200 dark:border-gray-800 pb-4">
+      <div className="flex cursor-pointer items-center justify-between rounded-md p-2 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800">
+        <div className="flex items-center gap-3">
+          <Logo />
+          {open && (
+            <div className={`transition-opacity duration-200 ${open ? 'opacity-100' : 'opacity-0'}`}>
+              <div className="flex items-center gap-2">
+                <div>
+                  <span className="block text-sm font-semibold text-gray-900 dark:text-gray-100">
+                    TomIsLoading
+                  </span>
+                  <span className="block text-xs text-gray-500 dark:text-gray-400">
+                    Pro Plan
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+        {open && (
+          <ChevronDown className="h-4 w-4 text-gray-400 dark:text-gray-500" />
+        )}
+      </div>
+    </div>
+  );
+};
+
+const Logo = () => {
+  return (
+    <div className="grid size-10 shrink-0 place-content-center rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 shadow-sm">
+      <svg
+        width="20"
+        height="auto"
+        viewBox="0 0 50 39"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+        className="fill-white"
+      >
+        <path
+          d="M16.4992 2H37.5808L22.0816 24.9729H1L16.4992 2Z"
+        />
+        <path
+          d="M17.4224 27.102L11.4192 36H33.5008L49 13.0271H32.7024L23.2064 27.102H17.4224Z"
+        />
+      </svg>
+    </div>
+  );
+};
+
+const ToggleClose = ({ open, setOpen }) => {
+  return (
+    <button
+      onClick={() => setOpen(!open)}
+      className="absolute bottom-0 left-0 right-0 border-t border-gray-200 dark:border-gray-800 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800"
+    >
+      <div className="flex items-center p-3">
+        <div className="grid size-10 place-content-center">
+          <ChevronsRight
+            className={`h-4 w-4 transition-transform duration-300 text-gray-500 dark:text-gray-400 ${
+              open ? "rotate-180" : ""
+            }`}
+          />
+        </div>
+        {open && (
+          <span
+            className={`text-sm font-medium text-gray-600 dark:text-gray-300 transition-opacity duration-200 ${
+              open ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            Hide
+          </span>
+        )}
+      </div>
+    </button>
+  );
+};
+
+const ExampleContent = ({ isDark, setIsDark }) => {
+  return (
+    <div className="flex-1 bg-gray-50 dark:bg-gray-950 p-6 overflow-auto">
+      {/* Header */}
+      <div className="flex items-center justify-between mb-8">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Dashboard</h1>
+          <p className="text-gray-600 dark:text-gray-400 mt-1">Welcome back to your dashboard</p>
+        </div>
+        <div className="flex items-center gap-4">
+          <button className="relative p-2 rounded-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
+            <Bell className="h-5 w-5" />
+            <span className="absolute -top-1 -right-1 h-3 w-3 bg-red-500 rounded-full"></span>
+          </button>
+          <button
+            onClick={() => setIsDark(!isDark)}
+            className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+          >
+            {isDark ? (
+              <Sun className="h-4 w-4" />
+            ) : (
+              <Moon className="h-4 w-4" />
+            )}
+          </button>
+          <button className="p-2 rounded-lg bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 transition-colors">
+            <User className="h-5 w-5" />
+          </button>
+        </div>
+      </div>
+      
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+        <div className="p-6 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm hover:shadow-md transition-shadow">
+          <div className="flex items-center justify-between mb-4">
+            <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+              <DollarSign className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+            </div>
+            <TrendingUp className="h-4 w-4 text-green-500" />
+          </div>
+          <h3 className="font-medium text-gray-600 dark:text-gray-400 mb-1">Total Sales</h3>
+          <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">$24,567</p>
+          <p className="text-sm text-green-600 dark:text-green-400 mt-1">+12% from last month</p>
+        </div>
+        
+        <div className="p-6 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm hover:shadow-md transition-shadow">
+          <div className="flex items-center justify-between mb-4">
+            <div className="p-2 bg-green-50 dark:bg-green-900/20 rounded-lg">
+              <Users className="h-5 w-5 text-green-600 dark:text-green-400" />
+            </div>
+            <TrendingUp className="h-4 w-4 text-green-500" />
+          </div>
+          <h3 className="font-medium text-gray-600 dark:text-gray-400 mb-1">Active Users</h3>
+          <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">1,234</p>
+          <p className="text-sm text-green-600 dark:text-green-400 mt-1">+5% from last week</p>
+        </div>
+        
+        <div className="p-6 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm hover:shadow-md transition-shadow">
+          <div className="flex items-center justify-between mb-4">
+            <div className="p-2 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+              <ShoppingCart className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+            </div>
+            <TrendingUp className="h-4 w-4 text-green-500" />
+          </div>
+          <h3 className="font-medium text-gray-600 dark:text-gray-400 mb-1">Orders</h3>
+          <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">456</p>
+          <p className="text-sm text-green-600 dark:text-green-400 mt-1">+8% from yesterday</p>
+        </div>
+
+        <div className="p-6 rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-sm hover:shadow-md transition-shadow">
+          <div className="flex items-center justify-between mb-4">
+            <div className="p-2 bg-orange-50 dark:bg-orange-900/20 rounded-lg">
+              <Package className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+            </div>
+            <TrendingUp className="h-4 w-4 text-green-500" />
+          </div>
+          <h3 className="font-medium text-gray-600 dark:text-gray-400 mb-1">Products</h3>
+          <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">89</p>
+          <p className="text-sm text-green-600 dark:text-green-400 mt-1">+3 new this week</p>
+        </div>
+      </div>
+      
+      {/* Content Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        {/* Recent Activity */}
+        <div className="lg:col-span-2">
+          <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Recent Activity</h3>
+              <button className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium">
+                View all
+              </button>
+            </div>
+            <div className="space-y-4">
+              {[
+                { icon: DollarSign, title: "New sale recorded", desc: "Order #1234 completed", time: "2 min ago", color: "green" },
+                { icon: Users, title: "New user registered", desc: "john.doe@example.com joined", time: "5 min ago", color: "blue" },
+                { icon: Package, title: "Product updated", desc: "iPhone 15 Pro stock updated", time: "10 min ago", color: "purple" },
+                { icon: Activity, title: "System maintenance", desc: "Scheduled backup completed", time: "1 hour ago", color: "orange" },
+                { icon: Bell, title: "New notification", desc: "Marketing campaign results", time: "2 hours ago", color: "red" },
+              ].map((activity, i) => (
+                <div key={i} className="flex items-center space-x-4 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors cursor-pointer">
+                  <div className={`p-2 rounded-lg ${
+                    activity.color === 'green' ? 'bg-green-50 dark:bg-green-900/20' :
+                    activity.color === 'blue' ? 'bg-blue-50 dark:bg-blue-900/20' :
+                    activity.color === 'purple' ? 'bg-purple-50 dark:bg-purple-900/20' :
+                    activity.color === 'orange' ? 'bg-orange-50 dark:bg-orange-900/20' :
+                    'bg-red-50 dark:bg-red-900/20'
+                  }`}>
+                    <activity.icon className={`h-4 w-4 ${
+                      activity.color === 'green' ? 'text-green-600 dark:text-green-400' :
+                      activity.color === 'blue' ? 'text-blue-600 dark:text-blue-400' :
+                      activity.color === 'purple' ? 'text-purple-600 dark:text-purple-400' :
+                      activity.color === 'orange' ? 'text-orange-600 dark:text-orange-400' :
+                      'text-red-600 dark:text-red-400'
+                    }`} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+                      {activity.title}
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                      {activity.desc}
+                    </p>
+                  </div>
+                  <div className="text-xs text-gray-400 dark:text-gray-500">
+                    {activity.time}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Quick Stats */}
+        <div className="space-y-6">
+          <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Quick Stats</h3>
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Conversion Rate</span>
+                <span className="text-sm font-medium text-gray-900 dark:text-gray-100">3.2%</span>
+              </div>
+              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                <div className="bg-blue-500 h-2 rounded-full" style={{ width: '32%' }}></div>
+              </div>
+              
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Bounce Rate</span>
+                <span className="text-sm font-medium text-gray-900 dark:text-gray-100">45%</span>
+              </div>
+              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                <div className="bg-orange-500 h-2 rounded-full" style={{ width: '45%' }}></div>
+              </div>
+              
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-600 dark:text-gray-400">Page Views</span>
+                <span className="text-sm font-medium text-gray-900 dark:text-gray-100">8.7k</span>
+              </div>
+              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                <div className="bg-green-500 h-2 rounded-full" style={{ width: '87%' }}></div>
+              </div>
+            </div>
+          </div>
+
+          <div className="rounded-xl border border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 p-6 shadow-sm">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-4">Top Products</h3>
+            <div className="space-y-3">
+              {['iPhone 15 Pro', 'MacBook Air M2', 'AirPods Pro', 'iPad Air'].map((product, i) => (
+                <div key={i} className="flex items-center justify-between py-2">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">{product}</span>
+                  <span className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                    ${Math.floor(Math.random() * 1000 + 500)}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Example;
+
+outro abaixo
+
+import React, { useState, useEffect, useRef } from 'react';
+
+const DigitalSerenity = () => {
+  const [mouseGradientStyle, setMouseGradientStyle] = useState({
+    left: '0px',
+    top: '0px',
+    opacity: 0,
+  });
+  const [ripples, setRipples] = useState([]);
+  const [scrolled, setScrolled] = useState(false);
+  const wordsRef = useRef([]); // Not strictly necessary if not directly manipulating post-initial animation
+  const floatingElementsRef = useRef([]);
+
+  useEffect(() => {
+    const animateWords = () => {
+      const wordElements = document.querySelectorAll('.word-animate');
+      wordElements.forEach(word => {
+        const delay = parseInt(word.getAttribute('data-delay')) || 0;
+        setTimeout(() => {
+          if (word) word.style.animation = 'word-appear 0.8s ease-out forwards';
+        }, delay);
+      });
+    };
+    const timeoutId = setTimeout(animateWords, 500);
+    return () => clearTimeout(timeoutId);
+  }, []);
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMouseGradientStyle({
+        left: `${e.clientX}px`,
+        top: `${e.clientY}px`,
+        opacity: 1,
+      });
+    };
+    const handleMouseLeave = () => {
+      setMouseGradientStyle(prev => ({ ...prev, opacity: 0 }));
+    };
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseleave', handleMouseLeave);
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseleave', handleMouseLeave);
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleClick = (e) => {
+      const newRipple = { id: Date.now(), x: e.clientX, y: e.clientY };
+      setRipples(prev => [...prev, newRipple]);
+      setTimeout(() => setRipples(prev => prev.filter(r => r.id !== newRipple.id)), 1000);
+    };
+    document.addEventListener('click', handleClick);
+    return () => document.removeEventListener('click', handleClick);
+  }, []);
+  
+  useEffect(() => {
+    const wordElements = document.querySelectorAll('.word-animate');
+    const handleMouseEnter = (e) => { if (e.target) e.target.style.textShadow = '0 0 20px rgba(203, 213, 225, 0.5)'; };
+    const handleMouseLeave = (e) => { if (e.target) e.target.style.textShadow = 'none'; };
+    wordElements.forEach(word => {
+      word.addEventListener('mouseenter', handleMouseEnter);
+      word.addEventListener('mouseleave', handleMouseLeave);
+    });
+    return () => {
+      wordElements.forEach(word => {
+        if (word) {
+          word.removeEventListener('mouseenter', handleMouseEnter);
+          word.removeEventListener('mouseleave', handleMouseLeave);
+        }
+      });
+    };
+  }, []);
+
+  useEffect(() => {
+    const elements = document.querySelectorAll('.floating-element-animate');
+    floatingElementsRef.current = Array.from(elements);
+    const handleScroll = () => {
+      if (!scrolled) {
+        setScrolled(true);
+        floatingElementsRef.current.forEach((el, index) => {
+          setTimeout(() => {
+            if (el) {
+              el.style.animationPlayState = 'running';
+              el.style.opacity = ''; 
+            }
+          }, (parseFloat(el.style.animationDelay || "0") * 1000) + index * 100);
+        });
+      }
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [scrolled]);
+
+  const pageStyles = `
+    #mouse-gradient-react {
+      position: fixed;
+      pointer-events: none;
+      border-radius: 9999px; /* rounded-full */
+      background-image: radial-gradient(circle, rgba(156, 163, 175, 0.05), rgba(107, 114, 128, 0.05), transparent 70%); /* slate-400/5, slate-500/5 */
+      transform: translate(-50%, -50%);
+      will-change: left, top, opacity;
+      transition: left 70ms linear, top 70ms linear, opacity 300ms ease-out;
+    }
+    @keyframes word-appear { 0% { opacity: 0; transform: translateY(30px) scale(0.8); filter: blur(10px); } 50% { opacity: 0.8; transform: translateY(10px) scale(0.95); filter: blur(2px); } 100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); } }
+    @keyframes grid-draw { 0% { stroke-dashoffset: 1000; opacity: 0; } 50% { opacity: 0.3; } 100% { stroke-dashoffset: 0; opacity: 0.15; } }
+    @keyframes pulse-glow { 0%, 100% { opacity: 0.1; transform: scale(1); } 50% { opacity: 0.3; transform: scale(1.1); } }
+    .word-animate { display: inline-block; opacity: 0; margin: 0 0.1em; transition: color 0.3s ease, transform 0.3s ease; }
+    .word-animate:hover { color: #cbd5e1; /* slate-300 */ transform: translateY(-2px); }
+    .grid-line { stroke: #94a3b8; /* slate-400 */ stroke-width: 0.5; opacity: 0; stroke-dasharray: 5 5; stroke-dashoffset: 1000; animation: grid-draw 2s ease-out forwards; }
+    .detail-dot { fill: #cbd5e1; /* slate-300 */ opacity: 0; animation: pulse-glow 3s ease-in-out infinite; }
+    .corner-element-animate { position: absolute; width: 40px; height: 40px; border: 1px solid rgba(203, 213, 225, 0.2); opacity: 0; animation: word-appear 1s ease-out forwards; }
+    .text-decoration-animate { position: relative; }
+    .text-decoration-animate::after { content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 1px; background: linear-gradient(90deg, transparent, #cbd5e1, transparent); animation: underline-grow 2s ease-out forwards; animation-delay: 2s; }
+    @keyframes underline-grow { to { width: 100%; } }
+    .floating-element-animate { position: absolute; width: 2px; height: 2px; background: #cbd5e1; border-radius: 50%; opacity: 0; animation: float 4s ease-in-out infinite; animation-play-state: paused; }
+    @keyframes float { 0%, 100% { transform: translateY(0) translateX(0); opacity: 0.2; } 25% { transform: translateY(-10px) translateX(5px); opacity: 0.6; } 50% { transform: translateY(-5px) translateX(-3px); opacity: 0.4; } 75% { transform: translateY(-15px) translateX(7px); opacity: 0.8; } }
+    .ripple-effect { position: fixed; width: 4px; height: 4px; background: rgba(203, 213, 225, 0.6); border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none; animation: pulse-glow 1s ease-out forwards; z-index: 9999; }
+  `;
+
+  return (
+    <>
+      <style>{pageStyles}</style>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-black to-slate-800 text-slate-100 font-primary overflow-hidden relative">
+        
+        <svg className="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <pattern id="gridReactDarkResponsive" width="60" height="60" patternUnits="userSpaceOnUse">
+              <path d="M 60 0 L 0 0 0 60" fill="none" stroke="rgba(100, 116, 139, 0.1)" strokeWidth="0.5"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#gridReactDarkResponsive)" />
+          <line x1="0" y1="20%" x2="100%" y2="20%" className="grid-line" style={{ animationDelay: '0.5s' }} />
+          <line x1="0" y1="80%" x2="100%" y2="80%" className="grid-line" style={{ animationDelay: '1s' }} />
+          <line x1="20%" y1="0" x2="20%" y2="100%" className="grid-line" style={{ animationDelay: '1.5s' }} />
+          <line x1="80%" y1="0" x2="80%" y2="100%" className="grid-line" style={{ animationDelay: '2s' }} />
+          <line x1="50%" y1="0" x2="50%" y2="100%" className="grid-line" style={{ animationDelay: '2.5s', opacity: '0.05' }} />
+          <line x1="0" y1="50%" x2="100%" y2="50%" className="grid-line" style={{ animationDelay: '3s', opacity: '0.05' }} />
+          <circle cx="20%" cy="20%" r="2" className="detail-dot" style={{ animationDelay: '3s' }} />
+          <circle cx="80%" cy="20%" r="2" className="detail-dot" style={{ animationDelay: '3.2s' }} />
+          <circle cx="20%" cy="80%" r="2" className="detail-dot" style={{ animationDelay: '3.4s' }} />
+          <circle cx="80%" cy="80%" r="2" className="detail-dot" style={{ animationDelay: '3.6s' }} />
+          <circle cx="50%" cy="50%" r="1.5" className="detail-dot" style={{ animationDelay: '4s' }} />
+        </svg>
+
+        {/* Responsive Corner Elements */}
+        <div className="corner-element-animate top-4 left-4 sm:top-6 sm:left-6 md:top-8 md:left-8" style={{ animationDelay: '4s' }}>
+          <div className="absolute top-0 left-0 w-2 h-2 bg-slate-300 opacity-30 rounded-full"></div>
+        </div>
+        <div className="corner-element-animate top-4 right-4 sm:top-6 sm:right-6 md:top-8 md:right-8" style={{ animationDelay: '4.2s' }}>
+          <div className="absolute top-0 right-0 w-2 h-2 bg-slate-300 opacity-30 rounded-full"></div>
+        </div>
+        <div className="corner-element-animate bottom-4 left-4 sm:bottom-6 sm:left-6 md:bottom-8 md:left-8" style={{ animationDelay: '4.4s' }}>
+          <div className="absolute bottom-0 left-0 w-2 h-2 bg-slate-300 opacity-30 rounded-full"></div>
+        </div>
+        <div className="corner-element-animate bottom-4 right-4 sm:bottom-6 sm:right-6 md:bottom-8 md:right-8" style={{ animationDelay: '4.6s' }}>
+          <div className="absolute bottom-0 right-0 w-2 h-2 bg-slate-300 opacity-30 rounded-full"></div>
+        </div>
+
+        <div className="floating-element-animate" style={{ top: '25%', left: '15%', animationDelay: '0.5s' }}></div>
+        <div className="floating-element-animate" style={{ top: '60%', left: '85%', animationDelay: '1s' }}></div>
+        <div className="floating-element-animate" style={{ top: '40%', left: '10%', animationDelay: '1.5s' }}></div>
+        <div className="floating-element-animate" style={{ top: '75%', left: '90%', animationDelay: '2s' }}></div>
+
+        {/* Responsive Main Content Padding */}
+        <div className="relative z-10 min-h-screen flex flex-col justify-between items-center px-6 py-10 sm:px-8 sm:py-12 md:px-16 md:py-20">
+          <div className="text-center">
+            <h2 className="text-xs sm:text-sm font-mono font-light text-slate-300 uppercase tracking-[0.2em] opacity-80">
+              <span className="word-animate" data-delay="0">Stillness</span>
+              <span className="word-animate" data-delay="300">speaks.</span>
+            </h2>
+            <div className="mt-4 w-12 sm:w-16 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent opacity-30 mx-auto"></div>
+          </div>
+
+          <div className="text-center max-w-5xl mx-auto relative">
+            {/* Responsive Main Heading Sizes */}
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extralight leading-tight tracking-tight text-slate-50 text-decoration-animate">
+              <div className="mb-4 md:mb-6">
+                <span className="word-animate" data-delay="700">Find</span>
+                <span className="word-animate" data-delay="850">your</span>
+                <span className="word-animate" data-delay="1000">center,</span>
+              </div>
+              {/* Responsive Secondary Heading Sizes & Added tracking-wide for letter spacing */}
+              <div className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-thin text-slate-300 leading-relaxed tracking-wide">
+                <span className="word-animate" data-delay="1400">where</span>
+                <span className="word-animate" data-delay="1550">peace</span>
+                <span className="word-animate" data-delay="1700">resides</span>
+                <span className="word-animate" data-delay="1850">and</span>
+                <span className="word-animate" data-delay="2000">clarity</span>
+                <span className="word-animate" data-delay="2150">awakens</span>
+                <span className="word-animate" data-delay="2300">within</span>
+                <span className="word-animate" data-delay="2450">the</span>
+                <span className="word-animate" data-delay="2600">soul.</span>
+              </div>
+            </h1>
+            {/* Responsive Detail Line Offsets */}
+            <div className="absolute -left-6 sm:-left-8 top-1/2 transform -translate-y-1/2 w-3 sm:w-4 h-px bg-slate-300 opacity-0" style={{ animation: 'word-appear 1s ease-out forwards', animationDelay: '3.2s' }}></div>
+            <div className="absolute -right-6 sm:-right-8 top-1/2 transform -translate-y-1/2 w-3 sm:w-4 h-px bg-slate-300 opacity-0" style={{ animation: 'word-appear 1s ease-out forwards', animationDelay: '3.4s' }}></div>
+          </div>
+
+          <div className="text-center">
+            <div className="mb-4 w-12 sm:w-16 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent opacity-30 mx-auto"></div>
+            <h2 className="text-xs sm:text-sm font-mono font-light text-slate-300 uppercase tracking-[0.2em] opacity-80">
+              <span className="word-animate" data-delay="3000">Observe,</span>
+              <span className="word-animate" data-delay="3200">accept,</span>
+              <span className="word-animate" data-delay="3400">let</span>
+              <span className="word-animate" data-delay="3550">go.</span>
+            </h2>
+            <div className="mt-6 flex justify-center space-x-4 opacity-0" style={{ animation: 'word-appear 1s ease-out forwards', animationDelay: '4.2s' }}>
+              <div className="w-1 h-1 bg-slate-300 rounded-full opacity-40"></div>
+              <div className="w-1 h-1 bg-slate-300 rounded-full opacity-60"></div>
+              <div className="w-1 h-1 bg-slate-300 rounded-full opacity-40"></div>
+            </div>
+          </div>
+        </div>
+
+        {/* Responsive Mouse Gradient Size & Blur */}
+        <div 
+          id="mouse-gradient-react"
+          className="w-60 h-60 blur-xl sm:w-80 sm:h-80 sm:blur-2xl md:w-96 md:h-96 md:blur-3xl"
+          style={{
+            left: mouseGradientStyle.left,
+            top: mouseGradientStyle.top,
+            opacity: mouseGradientStyle.opacity,
+          }}
+        ></div>
+
+        {ripples.map(ripple => (
+          <div
+            key={ripple.id}
+            className="ripple-effect"
+            style={{ left: `${ripple.x}px`, top: `${ripple.y}px` }}
+          ></div>
+        ))}
+      </div>
+    </>
+  );
+};
+
+export default DigitalSerenity;

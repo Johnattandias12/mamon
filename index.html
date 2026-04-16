@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FinDash — Dashboard Financeiro Pessoal</title>
+  <meta name="description" content="Dashboard financeiro pessoal premium. Arraste seus extratos CSV do Nubank e visualize toda a sua vida financeira com gráficos interativos e filtros avançados." />
+  <link rel="stylesheet" href="style.css" />
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <!-- Papa Parse (CSV) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+</head>
+<body>
+
+<!-- Animated background layers (from DigitalSerenity theme) -->
+<div class="bg-grid" aria-hidden="true"></div>
+<div class="bg-aurora" aria-hidden="true"></div>
+<div id="mouse-gradient" aria-hidden="true"></div>
+
+<!-- Toast notifications -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Modal overlay -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <h3 id="modal-title">Detalhes da Transação</h3>
+      <button class="modal-close" id="modalClose" title="Fechar">✕</button>
+    </div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<!-- APP SHELL -->
+<div class="app-shell">
+
+  <!-- ── SIDEBAR ───────────────────────────────────────────── -->
+  <aside class="sidebar" id="sidebar">
+
+    <!-- Logo -->
+    <div class="sidebar-logo">
+      <div class="logo-icon">💰</div>
+      <div class="logo-text">
+        <h2>FinDash</h2>
+        <p>Personal Finance</p>
+      </div>
+    </div>
+
+    <!-- Nav -->
+    <nav class="sidebar-nav">
+
+      <div class="sidebar-section-title">Principal</div>
+
+      <a class="nav-item active" id="nav-dashboard" data-page="dashboard" href="#" onclick="navigate('dashboard'); return false;">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label">Dashboard</span>
+      </a>
+      <a class="nav-item" id="nav-transacoes" data-page="transacoes" href="#" onclick="navigate('transacoes'); return false;">
+        <span class="nav-icon">📋</span>
+        <span class="nav-label">Transações</span>
+        <span class="nav-badge" id="badge-transacoes">0</span>
+      </a>
+      <a class="nav-item" id="nav-graficos" data-page="graficos" href="#" onclick="navigate('graficos'); return false;">
+        <span class="nav-icon">📈</span>
+        <span class="nav-label">Gráficos</span>
+      </a>
+      <a class="nav-item" id="nav-insights" data-page="insights" href="#" onclick="navigate('insights'); return false;">
+        <span class="nav-icon">💡</span>
+        <span class="nav-label">Insights</span>
+      </a>
+
+      <div class="sidebar-section-title">Dados</div>
+
+      <a class="nav-item" id="nav-upload" data-page="upload" href="#" onclick="navigate('upload'); return false;">
+        <span class="nav-icon">☁️</span>
+        <span class="nav-label">Importar CSV</span>
+      </a>
+      <a class="nav-item" id="nav-config" data-page="config" href="#" onclick="navigate('config'); return false;">
+        <span class="nav-icon">⚙️</span>
+        <span class="nav-label">Configurações</span>
+      </a>
+
+    </nav>
+
+    <!-- Drop zone mini (from sidebar) -->
+    <div class="sidebar-drop" id="sidebarDrop" onclick="document.getElementById('fileInput').click()"
+         ondragover="event.preventDefault(); this.classList.add('drag-over')"
+         ondragleave="this.classList.remove('drag-over')"
+         ondrop="handleSidebarDrop(event)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+        <polyline points="17 8 12 3 7 8"/>
+        <line x1="12" y1="3" x2="12" y2="15"/>
+      </svg>
+      <div class="drop-zone-mini-label">Soltar CSV aqui</div>
+    </div>
+
+    <!-- Toggle -->
+    <div class="sidebar-toggle">
+      <button class="toggle-btn" id="sidebarToggle" onclick="toggleSidebar()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        <span>Recolher</span>
+      </button>
+    </div>
+
+  </aside>
+
+  <!-- ── MAIN CONTENT ──────────────────────────────────────── -->
+  <main class="main" id="main">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <button class="icon-btn" id="mobileMenuBtn" onclick="toggleMobileMenu()" style="display:none" title="Menu">☰</button>
+      <div class="topbar-title">
+        <h1 id="pageTitle">Dashboard</h1>
+        <p id="pageSubtitle">Visão geral da sua vida financeira</p>
+      </div>
+      <div class="topbar-actions">
+        <div id="topbar-period-summary" style="font-size:12px; color:var(--text-muted)"></div>
+        <button class="icon-btn" id="refreshBtn" onclick="refreshAll()" title="Atualizar">↻</button>
+        <button class="icon-btn" onclick="clearAll()" title="Limpar dados" id="clearBtn">🗑️</button>
+      </div>
+    </header>
+
+    <!-- ════ PAGE: DASHBOARD ════════════════════════════════ -->
+    <section class="page active" id="page-dashboard">
+
+      <!-- Filter bar -->
+      <div class="filter-bar fade-in" id="filter-bar">
+        <div class="filter-group">
+          <span class="filter-label">Período</span>
+          <div class="quick-ranges">
+            <button class="range-btn" data-range="7"  onclick="setRange(7)">7d</button>
+            <button class="range-btn" data-range="15" onclick="setRange(15)">15d</button>
+            <button class="range-btn" data-range="30" onclick="setRange(30)">30d</button>
+            <button class="range-btn" data-range="90" onclick="setRange(90)">3m</button>
+            <button class="range-btn active" data-range="all" onclick="setRange('all')">Tudo</button>
+          </div>
+          <input type="date" class="filter-select" id="filterDateStart" onchange="applyFilters()">
+          <span style="color:var(--text-muted);font-size:12px">até</span>
+          <input type="date" class="filter-select" id="filterDateEnd" onchange="applyFilters()">
+        </div>
+        <div class="filter-divider"></div>
+        <div class="filter-group">
+          <span class="filter-label">Tipo</span>
+          <select class="filter-select" id="filterType" onchange="applyFilters()">
+            <option value="all">Todos</option>
+            <option value="credit">Entradas</option>
+            <option value="debit">Saídas</option>
+          </select>
+        </div>
+        <div class="filter-divider"></div>
+        <div class="filter-group">
+          <span class="filter-label">Categoria</span>
+          <select class="filter-select" id="filterCategory" onchange="applyFilters()">
+            <option value="all">Todas</option>
+          </select>
+        </div>
+        <div class="filter-divider"></div>
+        <input type="text" class="filter-input" id="filterSearch" placeholder="🔍  Buscar na descrição..." oninput="applyFilters()">
+        <div class="filter-spacer"></div>
+        <button class="clear-filters-btn" onclick="clearFilters()">✕ Limpar filtros</button>
+      </div>
+
+      <!-- KPIs Bento Grid -->
+      <div class="kpi-grid" id="kpiGrid">
+        <!-- Rendered by JS -->
+        <div class="empty-state fade-in" style="grid-column:span 4" id="kpi-empty">
+          <div class="empty-icon">💰</div>
+          <div class="empty-title">Nenhum dado carregado</div>
+          <div class="empty-desc">Arraste um extrato CSV do Nubank na barra lateral ou acesse "Importar CSV" para começar.</div>
+        </div>
+      </div>
+
+      <!-- Charts Row 1: Cash Flow + Donut -->
+      <div class="charts-grid" id="charts-main">
+        <div class="chart-card fade-in stagger-2">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Fluxo de Caixa</div>
+              <div class="chart-subtitle">Entradas e saídas ao longo do tempo</div>
+            </div>
+            <div class="chart-legend">
+              <div class="legend-item"><div class="legend-dot" style="background:#10b981"></div>Entradas</div>
+              <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div>Saídas</div>
+            </div>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="chartCashflow" height="220"></canvas>
+          </div>
+        </div>
+        <div class="chart-card fade-in stagger-3">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Gastos por Categoria</div>
+              <div class="chart-subtitle">Distribuição das despesas</div>
+            </div>
+          </div>
+          <div class="chart-canvas-wrap">
+            <canvas id="chartDonut" height="220"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Row 2: Monthly + Accumulated + Weekday -->
+      <div class="charts-grid-full fade-in stagger-4">
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Histórico Mensal</div>
+              <div class="chart-subtitle">Comparativo por mês</div>
+            </div>
+          </div>
+          <canvas id="chartMonthly" height="220"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Saldo Acumulado</div>
+              <div class="chart-subtitle">Evolução ao longo do tempo</div>
+            </div>
+          </div>
+          <canvas id="chartAccumulated" height="220"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <div class="chart-title">Gasto por Dia da Semana</div>
+              <div class="chart-subtitle">Onde você gasta mais</div>
+            </div>
+          </div>
+          <canvas id="chartWeekday" height="220"></canvas>
+        </div>
+      </div>
+
+      <!-- Top 10 -->
+      <div class="chart-card fade-in stagger-5">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">Top 10 Maiores Gastos</div>
+            <div class="chart-subtitle">Suas maiores despesas do período</div>
+          </div>
+        </div>
+        <canvas id="chartTop10" height="160"></canvas>
+      </div>
+
+      <!-- Category progress bars -->
+      <div class="chart-card fade-in stagger-6" id="catProgressCard">
+        <div class="chart-header"><div class="chart-title">Detalhamento por Categoria</div></div>
+        <div id="catProgressBars"></div>
+      </div>
+
+    </section>
+
+    <!-- ════ PAGE: TRANSAÇÕES ════════════════════════════════ -->
+    <section class="page" id="page-transacoes">
+      <div class="table-card fade-in">
+        <div class="table-header">
+          <div>
+            <h3>Todas as Transações</h3>
+            <div style="font-size:12px;color:var(--text-muted);margin-top:4px" id="tableCountLabel">0 transações</div>
+          </div>
+          <div class="table-search">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+            <input type="text" placeholder="Buscar transação..." id="txSearch" oninput="renderTable()">
+          </div>
+          <div class="table-actions">
+            <select class="filter-select" id="txTypeFilter" onchange="renderTable()" style="font-size:12px">
+              <option value="all">Todos</option>
+              <option value="credit">Entradas</option>
+              <option value="debit">Saídas</option>
+            </select>
+            <select class="filter-select" id="txCatFilter" onchange="renderTable()" style="font-size:12px">
+              <option value="all">Categoria</option>
+            </select>
+            <button class="export-btn" onclick="exportCSV()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              Exportar CSV
+            </button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th onclick="sortTable('date')">Data <span class="sort-icon" id="sort-date">↕</span></th>
+                <th onclick="sortTable('desc')">Descrição <span class="sort-icon" id="sort-desc">↕</span></th>
+                <th>Categoria</th>
+                <th onclick="sortTable('value')">Valor <span class="sort-icon" id="sort-value">↕</span></th>
+                <th>Tipo</th>
+              </tr>
+            </thead>
+            <tbody id="txTableBody"></tbody>
+          </table>
+        </div>
+        <div class="table-pagination">
+          <span id="paginationInfo">Mostrando 0 de 0</span>
+          <div class="pagination-controls" id="paginationControls"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════ PAGE: GRÁFICOS ══════════════════════════════════ -->
+    <section class="page" id="page-graficos">
+      <div class="charts-grid">
+        <div class="chart-card fade-in">
+          <div class="chart-header"><div><div class="chart-title">Fluxo de Caixa Detalhado</div></div></div>
+          <canvas id="chartCashflow2" height="300"></canvas>
+        </div>
+        <div class="chart-card fade-in stagger-1">
+          <div class="chart-header"><div><div class="chart-title">Categorias (Donut)</div></div></div>
+          <canvas id="chartDonut2" height="300"></canvas>
+        </div>
+      </div>
+      <div class="charts-grid">
+        <div class="chart-card fade-in stagger-2">
+          <div class="chart-header"><div><div class="chart-title">Saldo Acumulado</div></div></div>
+          <canvas id="chartAcc2" height="260"></canvas>
+        </div>
+        <div class="chart-card fade-in stagger-3">
+          <div class="chart-header"><div><div class="chart-title">Top 10 Maiores Gastos</div></div></div>
+          <canvas id="chartTop2" height="260"></canvas>
+        </div>
+      </div>
+      <div class="charts-grid">
+        <div class="chart-card fade-in stagger-4">
+          <div class="chart-header"><div><div class="chart-title">Histórico Mensal Completo</div></div></div>
+          <canvas id="chartMonthly2" height="260"></canvas>
+        </div>
+        <div class="chart-card fade-in stagger-5">
+          <div class="chart-header"><div><div class="chart-title">Padrão Semanal</div></div></div>
+          <canvas id="chartWeekday2" height="260"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════ PAGE: INSIGHTS ══════════════════════════════════ -->
+    <section class="page" id="page-insights">
+      <div class="insights-grid fade-in" id="insightsGrid">
+        <div class="empty-state" style="grid-column:span 3">
+          <div class="empty-icon">💡</div>
+          <div class="empty-title">Nenhum dado ainda</div>
+          <div class="empty-desc">Importe seus extratos CSV para ver insights sobre sua vida financeira.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════ PAGE: UPLOAD ════════════════════════════════════ -->
+    <section class="page" id="page-upload">
+      <div class="drop-zone fade-in" id="dropZone"
+           onclick="document.getElementById('fileInput').click()"
+           ondragover="event.preventDefault(); this.classList.add('drag-over')"
+           ondragleave="this.classList.remove('drag-over')"
+           ondrop="handleDrop(event)">
+        <div class="drop-zone-pulse">📂</div>
+        <h3>Arraste seus extratos bancários aqui</h3>
+        <p>Suporte ao formato CSV do <strong>Nubank</strong>.<br>Você pode importar múltiplos arquivos de diferentes meses.</p>
+        <div class="drop-formats">
+          <span class="format-badge">CSV Nubank</span>
+          <span class="format-badge">Múltiplos arquivos</span>
+          <span class="format-badge">Agrega automaticamente</span>
+        </div>
+      </div>
+      <input type="file" class="file-input-hidden" id="fileInput" multiple accept=".csv" onchange="handleFileSelect(event)">
+
+      <div id="filesList" class="files-list"></div>
+
+      <div class="chart-card fade-in" id="uploadPreviewCard" style="display:none">
+        <div class="chart-header"><div class="chart-title">Pré-visualização dos dados importados</div></div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Valor</th></tr></thead>
+            <tbody id="previewBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ════ PAGE: CONFIG ════════════════════════════════════ -->
+    <section class="page" id="page-config">
+      <div class="chart-card fade-in">
+        <div class="chart-header"><div class="chart-title">Regras de Categorização</div></div>
+        <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px">
+          Palavras-chave detectadas na descrição para classificar automaticamente suas transações.
+        </p>
+        <div id="catRulesDisplay"></div>
+        <div style="margin-top:20px;padding-top:16px;border-top:1px solid var(--border)">
+          <div style="font-size:13px;font-weight:600;margin-bottom:12px">Estatísticas dos Dados</div>
+          <div id="statsDisplay" style="font-size:13px;color:var(--text-muted);line-height:2"></div>
+        </div>
+      </div>
+
+      <div class="chart-card fade-in stagger-1">
+        <div class="chart-header"><div class="chart-title">Gerenciar Dados</div></div>
+        <div style="display:flex;gap:12px;flex-wrap:wrap">
+          <button class="export-btn" onclick="exportCSV()" style="padding:10px 18px">
+            📤 Exportar tudo como CSV
+          </button>
+          <button class="clear-filters-btn" onclick="clearAll()" style="padding:10px 18px">
+            🗑️ Limpar todos os dados
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main><!-- /main -->
+</div><!-- /app-shell -->
+
+<script src="app.js"></script>
+</body>
+</html>
