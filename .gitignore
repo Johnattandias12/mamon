@@ -5,3 +5,6 @@ node_modules/
 *.log
 .DS_Store
 Thumbs.db
+
+# extratos / dados financeiros - nunca commitar
+*.csv
