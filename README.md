@@ -1,26 +1,38 @@
 # Mamon
 
-A privacy first personal finance dashboard. Drop in your bank statement CSV and Mamon reads it entirely in your browser to show balances, spending breakdowns and charts. Nothing is uploaded, nothing is stored, your data never leaves your machine.
+Privacy-first personal finance dashboard: drop a bank statement CSV and analyze it entirely in the browser.
 
-Live: https://mamon-azure.vercel.app
+**Live:** https://mamon-azure.vercel.app
 
-## How it works
+![Mamon](docs/screenshot.png)
 
-1. Export your statement as a CSV from your bank
-2. Drag and drop the file onto the page
-3. Everything is parsed client side with Papa Parse and rendered with Chart.js
+## Overview
+
+Mamon turns a bank statement export into a financial dashboard without sending a single byte anywhere. The CSV is parsed and categorized in the browser, so it can be used with real data safely. The screenshot above uses fictitious sample data.
 
 ## Features
 
-- Drag and drop CSV import
-- Spending by category, income vs expense, balance over time
-- Export a cleaned CSV back out
-- Dark, responsive UI
+- Drag and drop import of one or more CSV statements (Nubank format)
+- Automatic categorization of transactions
+- Balance, income, expenses, biggest expense, daily average and per-category totals
+- Cash flow, category, monthly, cumulative balance and weekday charts
+- Filters by period, type, category and free-text search
+- Export of the cleaned data back to CSV
 
 ## Privacy
 
-All processing happens locally in your browser. No server, no upload, no tracking. CSV files are gitignored, so personal data never gets committed.
+All processing happens locally. There is no server, no upload and no tracking, and CSV files are ignored by git so personal data never gets committed.
 
-## Stack
+## Tech stack
 
-Vanilla JavaScript, Papa Parse, Chart.js. Static site, no build step.
+Vanilla JavaScript, Papa Parse and Chart.js. Static site with no build step, hosted on Vercel.
+
+## Running locally
+
+```bash
+npx serve .
+```
+
+## Author
+
+Built by [Johnattan Dias](https://github.com/Johnattandias12) ([LinkedIn](https://www.linkedin.com/in/johnattandias)).
